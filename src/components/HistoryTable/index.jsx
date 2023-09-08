@@ -19,7 +19,7 @@ const HistoryTable = ({
     const final_weights = has_data ? epoch_data[epoch_data.length - 1]?.new_weights : []
 
     const EpochToRender = useMemo(() => {
-        return () => (
+        const render = () => (
             <Card>
                 {has_data ?
                     Array.isArray(epoch_data) && epoch_data.map((data, index) => (
@@ -111,8 +111,10 @@ const HistoryTable = ({
                 />
             </Card>
         )
-    }, [epochCount, TrainingHistory])
+        return render
+    }, [has_data, current_percent, epoch_data])
 
+    EpochToRender.displayName = "EpochToRender";
 
     return (
         <>
@@ -158,7 +160,9 @@ const HistoryTable = ({
                         final_weights.map((weight, index) => {
                             const is_last = index === final_weights.length - 1
                             return (
-                                <Card>
+                                <Card
+                                    key={index}
+                                >
                                     <Subtitle>
                                         W{is_last ? 0 : index + 1} (Final)
                                     </Subtitle>
@@ -178,4 +182,6 @@ const HistoryTable = ({
     )
 }
 
-export default HistoryTable
+HistoryTable.displayName = "HistoryTable";
+
+export default HistoryTable;
