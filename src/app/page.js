@@ -38,6 +38,11 @@ export default function Home() {
   const [learningRate, setLearningRate] = useState(0.1);
   const [epochs, setEpochs] = useState(1000);
 
+  const [bias, setBias] = useState({
+    X0: 1,
+    W0: 1,
+  });
+
   const [classifications, setClassifications] = useState([{
     text: "-1",
     value: -1,
@@ -77,7 +82,8 @@ export default function Home() {
       weights: weights,
       learning_rate: learningRate,
       epochs: epochs,
-      set_data_training: setDataTraining
+      set_data_training: setDataTraining,
+      bias: bias,
     });
   }
 
@@ -129,7 +135,7 @@ export default function Home() {
           </Card>
         </div>
 
-        <div className="flex flex-row justify-center w-full">
+        <div className="flex flex-row justify-center w-full mb-4">
           <Card className="flex flex-row justify-center w-1/2 gap-12">
             <div className="w-1/3 my-4">
               <Title className="text-left mb-2 text-xs">
@@ -158,6 +164,40 @@ export default function Home() {
                   setClassifications(newClassifications); 
                 }}
                 className="w-full"
+              />
+            </div>
+          </Card>
+        </div>
+
+        <div className="flex flex-row justify-center w-full">
+          <Card className="flex flex-row justify-center w-1/4 gap-12">
+            <div className="w-1/3 my-4">
+              <Title className="text-left mb-2 text-xs">
+                X0
+              </Title>
+              <NumberInput
+                value={bias.X0}
+                onChange={(event) => {
+                  const newBias = Object.assign({}, bias);
+                  newBias.X0 = event.target.value;
+                  setBias(newBias); 
+                }}
+                className="w-1/4"
+              />
+            </div>
+
+            <div className="w-1/3 my-4">
+              <Title className="text-left mb-2 text-xs">
+                W0
+              </Title>
+              <NumberInput
+                value={bias.W0}
+                onChange={(event) => {
+                  const newBias = Object.assign({}, bias);
+                  newBias.W0 = event.target.value;
+                  setBias(newBias); 
+                }}
+                className="w-1/4"
               />
             </div>
           </Card>

@@ -5,12 +5,11 @@ const Widrow_Hoff_Algorithm = ({
     weights,
     learning_rate,
     epochs,
-    set_data_training
+    set_data_training,
+    bias
 }) => {
     const data_training = [];
-    let weights_to_train = [...weights, 1];
-
-    let flag_count = 0;
+    let weights_to_train = [...weights, bias.W0];
 
     for (let epoch = 0; epoch < epochs; epoch++) {
         
@@ -22,7 +21,7 @@ const Widrow_Hoff_Algorithm = ({
                 ...inputs_data_to_train
             } = data;
             
-            const array_data_to_train = [...Object.values(inputs_data_to_train), 1];
+            const array_data_to_train = [...Object.values(inputs_data_to_train), bias.X0];
 
             const Sum_of_all_inputs_with_weights = array_data_to_train.reduce((sum, input, index) => {
                 return sum + (input * weights_to_train[index]);
@@ -62,15 +61,9 @@ const Widrow_Hoff_Algorithm = ({
 
         const epoch_is_correct = calculated_data_epoch.every(data => data.output_is_correct);
 
-        if(epoch_is_correct === false) {
-            flag_count = 0;
-            continue;
+        if(epoch_is_correct) {
+            break
         };
-
-        flag_count++;
-        const has_more_3_sequence_epochs_without_error = flag_count >= 3;
-
-        if(has_more_3_sequence_epochs_without_error) break;
     }
 
     set_data_training(data_training);

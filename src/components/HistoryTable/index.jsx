@@ -16,7 +16,8 @@ const HistoryTable = ({
 
     const current_percent = has_data ? epoch_data?.filter(data => data.output_is_correct).length / epoch_data.length * 100 : 0;
 
-    const final_weights = has_data ? epoch_data[epoch_data.length - 1]?.new_weights : []
+    const final_train = TrainingHistory[TrainingHistory.length - 1]
+    const final_weights = Array.isArray(final_train) ? final_train[final_train.length - 1].new_weights : []
 
     const EpochToRender = useMemo(() => {
         const render = () => (

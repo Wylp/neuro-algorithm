@@ -32,9 +32,9 @@ const ConstructTable = ({
     setData = () => { },
     defaultData = [],
     selectOptions = [],
-    StartTraining = () => {},
+    StartTraining = () => { },
     weights = [],
-    setWeights = () => {}
+    setWeights = () => { }
 }) => {
 
     const setSelection = (Object, index) => {
@@ -105,7 +105,7 @@ const ConstructTable = ({
         });
 
         const new_weights = [...weights, 0];
-        
+
         setWeights(new_weights);
 
         setData(newData);
@@ -146,7 +146,7 @@ const ConstructTable = ({
                                 <TableCell key={columnIndex}>
                                     {
                                         is_last_column ?
-                                            <Select 
+                                            <Select
                                                 value={selectOptions.find(option => {
                                                     const column_value = row[column_name];
                                                     return option.value === column_value;
