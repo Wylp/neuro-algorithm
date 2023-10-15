@@ -3,13 +3,15 @@
 const Widrow_Hoff_Algorithm = ({
     data_to_calculate,
     weights,
-    learning_rate,
+    learning_rate: old_training_rate,
     epochs,
     set_data_training,
     bias
 }) => {
     const data_training = [];
     let weights_to_train = [...weights, bias.W0];
+
+    const learning_rate = old_training_rate * 1000;
 
     for (let epoch = 0; epoch < epochs; epoch++) {
         
@@ -32,11 +34,13 @@ const Widrow_Hoff_Algorithm = ({
             const middleman_output = Sum_of_all_inputs_with_weights;
             const output = middleman_output >= 0 ? 1 : -1;
             const output_is_correct = Expected === output;
-            const error = Expected - middleman_output;
+            const error = Expected - output;
 
-            const new_weights = array_data_to_train.map((input, index) => {
-                return Number(weights_to_train[index]) + (learning_rate * error * (input/all_sums_elevated_to_2));
-            });
+            const new_weights_without_bias = array_data_to_train.map((input, index) => {
+                return Number(weights_to_train[index]) + ((learning_rate * error) * (input / all_sums_elevated_to_2));
+            }).slice(0, array_data_to_train.length - 1);
+
+            const new_weights = [...new_weights_without_bias, bias.W0];
 
             calculated_data_epoch.push({
                 array_data_to_train,

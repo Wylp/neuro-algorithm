@@ -72,7 +72,7 @@ const HistoryTable = ({
                             <Subtitle
                                 className="flex flex-row my-2 justify-between"
                             >
-                                E (Erro) = ({data?.expected}) - ({data?.middleman_output}) = {data?.error}
+                                E (Erro) = ({data?.expected}) - ({data?.output}) = {data?.error}
                             </Subtitle>
 
                             <Subtitle
