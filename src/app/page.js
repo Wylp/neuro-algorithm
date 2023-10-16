@@ -1,14 +1,12 @@
 "use client";
 
-import { EmptyState, HistoryTable, Table } from "@/components";
-import { 
-  Widrow_Hoff_Algorithm 
-} from "@/utils";
+import { EmptyState, HistoryTable, Table, ErrorGraph, WeightsGraph } from "@/components";
+import { Widrow_Hoff_Algorithm } from "@/utils";
 
-import { 
-  Card, 
-  NumberInput, 
-  Subtitle, 
+import {
+  Card,
+  NumberInput,
+  Subtitle,
   Tab,
   TabGroup,
   TabList,
@@ -16,15 +14,10 @@ import {
   TabPanels,
   TableRow,
   TextInput,
-  Title 
+  Title,
 } from "@tremor/react";
 
-import { 
-  useEffect,
-  useMemo,
-  useRef,
-  useState 
-} from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 export default function Home() {
   const DEFAULT_DATA = [
@@ -43,31 +36,33 @@ export default function Home() {
     W0: 1,
   });
 
-  const [classifications, setClassifications] = useState([{
-    text: "-1",
-    value: -1,
-  }, {
-    text: "1",
-    value: 1,
-  }]);
+  const [classifications, setClassifications] = useState([
+    {
+      text: "-1",
+      value: -1,
+    },
+    {
+      text: "1",
+      value: 1,
+    },
+  ]);
 
   const [weights, setWeights] = useState([0, 0]);
 
   const StartTraining = () => {
-
     const no_valid_rows_data = data.filter((data_row) => {
       Object.values(data_row).filter((value) => {
         if (value === "" || !Number.isFinite(Number(value))) {
           return true;
         }
-      })
-    })
+      });
+    });
 
     const no_valid_weights = weights.filter((weight) => {
       if (weight === "" || !Number.isFinite(Number(weight))) {
         return true;
       }
-    })
+    });
 
     const has_no_valid_rows_data = no_valid_rows_data.length > 0;
     const has_no_valid_weights = no_valid_weights.length > 0;
@@ -85,7 +80,7 @@ export default function Home() {
       set_data_training: setDataTraining,
       bias: bias,
     });
-  }
+  };
 
   const columns = useMemo(
     () =>
@@ -146,7 +141,7 @@ export default function Home() {
                 onChange={(event) => {
                   const newClassifications = [...classifications];
                   newClassifications[1].text = event.target.value;
-                  setClassifications(newClassifications); 
+                  setClassifications(newClassifications);
                 }}
                 className="w-full"
               />
@@ -161,7 +156,7 @@ export default function Home() {
                 onChange={(event) => {
                   const newClassifications = [...classifications];
                   newClassifications[0].text = event.target.value;
-                  setClassifications(newClassifications); 
+                  setClassifications(newClassifications);
                 }}
                 className="w-full"
               />
@@ -172,30 +167,26 @@ export default function Home() {
         <div className="flex flex-row justify-center w-full">
           <Card className="flex flex-row justify-center w-1/4 gap-12">
             <div className="w-1/3 my-4">
-              <Title className="text-left mb-2 text-xs">
-                X0
-              </Title>
+              <Title className="text-left mb-2 text-xs">X0</Title>
               <NumberInput
                 value={bias.X0}
                 onChange={(event) => {
                   const newBias = Object.assign({}, bias);
                   newBias.X0 = event.target.value;
-                  setBias(newBias); 
+                  setBias(newBias);
                 }}
                 className="w-1/4"
               />
             </div>
 
             <div className="w-1/3 my-4">
-              <Title className="text-left mb-2 text-xs">
-                W0
-              </Title>
+              <Title className="text-left mb-2 text-xs">W0</Title>
               <NumberInput
                 value={bias.W0}
                 onChange={(event) => {
                   const newBias = Object.assign({}, bias);
                   newBias.W0 = event.target.value;
-                  setBias(newBias); 
+                  setBias(newBias);
                 }}
                 className="w-1/4"
               />
@@ -204,10 +195,10 @@ export default function Home() {
         </div>
 
         <div className="flex flex-row justify-center w-full gap-6">
-        {columns.reduce((acc, column, index) => {
-          if (columns.length == index + 1) return acc;
+          {columns.reduce((acc, column, index) => {
+            if (columns.length == index + 1) return acc;
 
-          return acc.concat(
+            return acc.concat(
               <Card className="w-1/5 my-4" key={index}>
                 <Title className="text-left mb-2 text-xs">
                   W{index + 1} {"->"} X{index + 1}
@@ -225,9 +216,8 @@ export default function Home() {
                 />
               </Card>
             );
-          }, [])
-        }
-      </div>
+          }, [])}
+        </div>
       </Card>
 
       <Card className="w-full" decoration="top">
@@ -240,9 +230,9 @@ export default function Home() {
         </Subtitle>
 
         <Card className="w-full my-4">
-          <Table 
-            data={data} 
-            setData={setData} 
+          <Table
+            data={data}
+            setData={setData}
             defaultData={DEFAULT_DATA}
             selectOptions={classifications}
             StartTraining={StartTraining}
@@ -262,33 +252,33 @@ export default function Home() {
           <TabGroup className="w-3/4 my-4">
             <TabList>
               <Tab key={1}>Tabela de Treinamento</Tab>
-              <Tab key={2}>Grafico de Posições</Tab>
+              <Tab key={2}>Progresso de Erro</Tab>
+              <Tab key={3}>Progresso de Pesos</Tab>
             </TabList>
             <TabPanels>
-              {
-                Array.isArray(dataTraining) && dataTraining.length > 0 ?
-                (
-                  [
+              {Array.isArray(dataTraining) && dataTraining.length > 0
+                ? [
                     <TabPanel key={1}>
                       <HistoryTable TrainingHistory={dataTraining} />
                     </TabPanel>,
                     <TabPanel key={2}>
-
-                    </TabPanel>
+                      <ErrorGraph TrainingHistory={dataTraining} />
+                    </TabPanel>,
+                    <TabPanel key={3}>
+                      <WeightsGraph TrainingHistory={dataTraining} />
+                    </TabPanel>,
                   ]
-                )
-                :
-                (
-                  [
-                    <TabPanel key={1} >
+                : [
+                    <TabPanel key={1}>
                       <EmptyState />
                     </TabPanel>,
                     <TabPanel key={2}>
                       <EmptyState />
-                    </TabPanel>
-                  ]
-                )
-              }
+                    </TabPanel>,
+                    <TabPanel key={3}>
+                      <EmptyState />
+                    </TabPanel>,
+                  ]}
             </TabPanels>
           </TabGroup>
         </div>
