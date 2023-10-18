@@ -3,15 +3,13 @@
 const Widrow_Hoff_Algorithm = ({
     data_to_calculate,
     weights,
-    learning_rate: old_training_rate,
+    learning_rate,
     epochs,
     set_data_training,
     bias
 }) => {
     const data_training = [];
     let weights_to_train = [...weights, bias.W0];
-
-    const learning_rate = old_training_rate * 1000;
 
     for (let epoch = 0; epoch < epochs; epoch++) {
         
